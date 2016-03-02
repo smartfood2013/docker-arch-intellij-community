@@ -26,6 +26,8 @@ RUN pacman --quiet --noconfirm -S jre8-openjdk
 RUN pacman --quiet --noconfirm -S jdk8-openjdk
 RUN pacman --quiet --noconfirm -S xorg-xauth
 RUN pacman --quiet --noconfirm -S xorg-xclock
+RUN pacman --quiet --noconfirm -S nodejs
+RUN pacman --quiet --noconfirm -S npm
 
 RUN mkdir /var/run/sshd
 RUN /usr/bin/ssh-keygen -A
