@@ -2,9 +2,9 @@ FROM base/arch
 MAINTAINER Alan Hollis, @alan01252
 
 RUN echo 'Server = http://archlinux.mirrors.uk2.net/$repo/os/$arch' > /etc/pacman.d/mirrorlist && \
-    echo en_GB.UTF-8 UTF-8 > /etc/locale.gen && \
+    echo en_US.UTF-8 UTF-8 > /etc/locale.gen && \
     locale-gen && \
-    echo LANG="en_GB.UTF-8" > /etc/locale.conf && \
+    echo LANG="en_US.UTF-8" > /etc/locale.conf && \
     pacman -Syu --ignore filesystem --noconfirm && \
     pacman -S supervisor --noconfirm && \
     mkdir -p /home/nobody && \
@@ -13,7 +13,7 @@ RUN echo 'Server = http://archlinux.mirrors.uk2.net/$repo/os/$arch' > /etc/pacma
     pacman -Scc --noconfirm
 
 ENV HOME /root
-ENV LANG en_GB.UTF-8
+ENV LANG en_US.UTF-8
 
 RUN pacman --quiet --noconfirm -S base-devel
 RUN pacman --quiet --noconfirm -S yajl
