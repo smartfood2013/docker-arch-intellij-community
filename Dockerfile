@@ -1,7 +1,7 @@
 FROM base/arch
 MAINTAINER Alan Hollis, @alan01252
 
-RUN echo 'Server = http://archlinux.mirrors.uk2.net/$repo/os/$arch' > /etc/pacman.d/mirrorlist && \
+RUN echo 'Server = http://archlinux.surlyjake.com/archlinux/core/os/x86_64' > /etc/pacman.d/mirrorlist && \
     echo en_US.UTF-8 UTF-8 > /etc/locale.gen && \
     locale-gen && \
     echo LANG="en_US.UTF-8" > /etc/locale.conf && \
