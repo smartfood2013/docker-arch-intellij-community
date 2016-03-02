@@ -35,6 +35,7 @@ RUN /usr/bin/ssh-keygen -A
 RUN useradd intellij -p "*" -d "/home/intellij/" -s /bin/bash -u 5001 
 RUN mkdir -p /home/intellij/.ssh
 ADD younus.raza.pub /home/intellij/.ssh/authorized_keys
+ADD seblu.pub /home/intellij/.ssh/authorized_keys
 RUN chown -R intellij:intellij /home/intellij/
 RUN chown -R intellij:intellij /home/intellij/.ssh
 
