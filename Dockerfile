@@ -1,11 +1,16 @@
 FROM base/arch
 MAINTAINER Alan Hollis, @alan01252
 
-RUN echo 'Server = http://archlinux.surlyjake.com/archlinux/core/os/x86_64' > /etc/pacman.d/mirrorlist && \
+RUN grep -i SigLevel /etc/pacman.conf
+RUN sed -i "/^SigLevel/a SigLevel = Never" /etc/pacman.conf
+RUN grep -i SigLevel /etc/pacman.conf
+RUN pacman-db-upgrade /var/lib/pacman
+RUN echo 'Server = http://archlinux.mirrors.uk2.net/$repo/os/$arch' > /etc/pacman.d/mirrorlist && \
     echo en_US.UTF-8 UTF-8 > /etc/locale.gen && \
     locale-gen && \
     echo LANG="en_US.UTF-8" > /etc/locale.conf && \
     pacman -Syu --ignore filesystem --noconfirm && \
+	pacman-db-upgrade /var/lib/pacman && \
     pacman -S supervisor --noconfirm && \
     mkdir -p /home/nobody && \
     chown -R nobody:users /home/nobody && \
@@ -14,6 +19,8 @@ RUN echo 'Server = http://archlinux.surlyjake.com/archlinux/core/os/x86_64' > /e
 
 ENV HOME /root
 ENV LANG en_US.UTF-8
+
+
 
 RUN pacman --quiet --noconfirm -S base-devel
 RUN pacman --quiet --noconfirm -S yajl
@@ -35,20 +42,28 @@ RUN /usr/bin/ssh-keygen -A
 RUN useradd intellij -p "*" -d "/home/intellij/" -s /bin/bash -u 5001 
 RUN mkdir -p /home/intellij/.ssh
 ADD younus.raza.pub /home/intellij/.ssh/authorized_keys
-ADD seblu.pub /home/intellij/.ssh/authorized_keys
 RUN chown -R intellij:intellij /home/intellij/
 RUN chown -R intellij:intellij /home/intellij/.ssh
 
+RUN useradd -m -g users -G wheel -s /bin/bash younus -p '*'
+#RUN su younus
+RUN sed -i '$ a nobody ALL=(ALL) NOPASSWD: ALL' /etc/sudoers
+RUN sed -i '$ a younus ALL=(ALL) NOPASSWD: ALL' /etc/sudoers
+RUN pacman --quiet --noconfirm -S git
 WORKDIR /tmp/scratch
-RUN curl https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz | tar zx
+RUN git clone https://aur.archlinux.org/package-query.git
+RUN git clone https://aur.archlinux.org/yaourt.git
+RUN chmod -R 777 /tmp/scratch/package-query
+RUN cd package-query
 WORKDIR /tmp/scratch/package-query
-RUN makepkg --asroot --noconfirm -i
-
-WORKDIR /tmp/scratch
-RUN curl https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz | tar zx
+RUN sudo -u nobody makepkg -si --noconfirm --needed
+RUN cd ..
+RUN chmod -R 777 /tmp/scratch/yaourt
+RUN cd /tmp/scratch/yaourt
 WORKDIR /tmp/scratch/yaourt
-RUN makepkg --asroot --noconfirm -i
-
+RUN sudo -u nobody makepkg -si --noconfirm
+RUN cd ..
+# RUN su
 RUN yaourt --quiet --noconfirm -Sy intellij-idea-community-edition
 
 RUN echo "/usr/share/intellijidea-ce/bin/idea.sh" >> /usr/local/bin/intellij
