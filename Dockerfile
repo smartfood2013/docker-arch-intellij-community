@@ -74,7 +74,8 @@ RUN sed -i 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/' /etc/ssh/sshd_
 	sed -i 's/#PermitTunnel no/PermitTunnel yes/' /etc/ssh/sshd_config && \
 	sed -i 's/#X11Forwarding no/X11Forwarding yes/' /etc/ssh/sshd_config && \
 	sed -i 's/#X11UseLocalhost yes/X11UseLocalhost no/' /etc/ssh/sshd_config && \
-	sed -i 's/#AddressFamily any/AddressFamily any/' /etc/ssh/sshd_config
+	sed -i 's/#AddressFamily any/AddressFamily any/' /etc/ssh/sshd_config && \
+	sed -ri 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
 
 
 RUN sed -i 's/heavy/medium/' /usr/share/intellijidea-ce/bin/idea.properties
